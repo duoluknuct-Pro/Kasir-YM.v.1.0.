@@ -6,7 +6,6 @@ const assetsToCache = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
-// Install Service Worker & Cache Aset
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -15,7 +14,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Aktivasi & Hapus Cache Lama jika ada pembaruan
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -30,9 +28,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Request (Mengambil dari cache jika offline untuk aset statis)
 self.addEventListener('fetch', (event) => {
-  // Abaikan request ke API Google Apps Script karena butuh data real-time
   if (event.request.url.includes('script.google.com')) {
     return;
   }
