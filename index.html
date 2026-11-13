@@ -180,13 +180,27 @@
 
     function loadMenu() {
       fetch(API_URL + "?action=getMenu")
-        .then(response => response.json())
-        .then(data => {
-          daftarMenu = data;
-          renderMenu();
-          renderStokTabel();
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Respon jaringan tidak OK');
+          }
+          return response.json();
         })
-        .catch(err => console.error("Gagal memuat menu:", err));
+        .then(data => {
+          console.log("Data menu diterima:", data); // Cek hasil di F12 Console browser
+          if (Array.isArray(data)) {
+            daftarMenu = data;
+            renderMenu();
+            renderStokTabel();
+          } else {
+            console.error("Format data bukan array:", data);
+            document.getElementById('loading-menu').innerText = 'Gagal memuat format menu.';
+          }
+        })
+        .catch(err => {
+          console.error("Gagal memuat menu:", err);
+          document.getElementById('loading-menu').innerText = 'Gagal terhubung ke database.';
+        });
     }
 
     function renderMenu() {
